@@ -30,7 +30,14 @@
 #define RS_DATA_M       0x200
 #define READ_M          0x100
 
+typedef enum _commands
+{
+    CLEAR_DISP  =   0x01,
+    NEW_LINE    =   0xC0
+} commands;
+
 void initHd44780(void);
+void resetDisplay(void);
 void sendCommand(uint16_t data);
 void putcLcd(char c);
 void putsLcd(const char* str);

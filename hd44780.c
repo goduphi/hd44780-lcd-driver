@@ -63,6 +63,34 @@ void sendCommand(uint16_t data)
     setPinValue(EN, 0);
 }
 
+void resetDisplay(void)
+{
+    // Refer to page 45 of the Datasheet
+    // Wait time > 15ms
+    waitMicrosecond(20000);
+    sendCommand(0x30);
+    waitMicrosecond(5000);
+    sendCommand(0x30);
+    waitMicrosecond(150);
+    sendCommand(0x30);
+
+    // Wait for internal operation to end
+    // The busy flag will be set to 1 while internal operation
+    // is being performed
+    sendCommand(READ_M);
+    while(getPinValue(DB7));
+
+    // Refer to page 4 of the Datasheet
+    // Display off, 2 line display, 5x8 character font
+    sendCommand(0x38);
+    // Turn display on
+    sendCommand(0xC);
+    // Clear display
+    sendCommand(CLEAR_DISP);
+    // Set entry mode, increment the cursor by 1
+    sendCommand(0x6);
+}
+
 // Takes an ASCII character and prints it on to the LCD
 void putcLcd(char c)
 {
